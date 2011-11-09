@@ -179,7 +179,7 @@ class AssignmentParticipant < Participant
        if self.team
         self.team.get_participants.each {
           | user |
-          val = WikiType.review_mediawiki_group(self.assignment.directory_path, currenttime, user.handle)         
+          val = WikiType.review_mediawiki_group(self.assignment.directory_path, self.assignment.id, user.handle)
           if val != nil
               submissions << val
           end                 
@@ -187,7 +187,7 @@ class AssignmentParticipant < Participant
        end
        return submissions
     elsif self.assignment.wiki_type.name == "MediaWiki"
-       return WikiType.review_mediawiki(self.assignment.directory_path, currenttime, self.handle)       
+       return WikiType.review_mediawiki(self.assignment.directory_path, self.assignment.id, self.handle)
     elsif self.assignment.wiki_type.name == "DocuWiki"
        return WikiType.review_docuwiki(self.assignment.directory_path, currenttime, self.handle)             
     else
