@@ -118,6 +118,98 @@ class AssignmentControllerTest < ActionController::TestCase
 
   end
 
+  def test_wiki_spider_no_due_dates
+    questionnaire_id = Questionnaire.first.id
+    instructorid = Instructor.first.id
+    courseid = Course.first.id
+
+    #@testUser = users(:Student1).id
+    #@user = User.find(@testUser)
+    #id = Assignment.find(assignments(:assignment_team_count).id).id
+    # create a new assignment
+    assignment = Assignment.new(:name => "2_valid_test",
+                                :course_id => 1,
+                                :directory_path => "2_valid_test",
+                                :review_questionnaire_id => questionnaire_id,
+                                :review_of_review_questionnaire_id => questionnaire_id,
+                                :author_feedback_questionnaire_id => questionnaire_id,
+                                :instructor_id => instructorid,
+                                :course_id => courseid
+    )
+
+
+    #p flash[:notice].to_s
+    assert assignment.save
+
+    sample_response = ''
+    responses = WikiHelper::review_mediawiki 'http://expertiza.csc.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', assignment.id, 'sarao'
+    assert_equal responses, sample_response
+
+    responses = WikiHelper::review_mediawiki 'http://expertiza.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', assignment.id, 'srikanth'
+    assert_equal responses, sample_response
+  end
+
+  def test_wiki_spider_wrong_url
+    questionnaire_id = Questionnaire.first.id
+    instructorid = Instructor.first.id
+    courseid = Course.first.id
+
+    #@testUser = users(:Student1).id
+    #@user = User.find(@testUser)
+    #id = Assignment.find(assignments(:assignment_team_count).id).id
+    # create a new assignment
+    assignment = Assignment.new(:name => "2_valid_test",
+                                :course_id => 1,
+                                :directory_path => "2_valid_test",
+                                :review_questionnaire_id => questionnaire_id,
+                                :review_of_review_questionnaire_id => questionnaire_id,
+                                :author_feedback_questionnaire_id => questionnaire_id,
+                                :instructor_id => instructorid,
+                                :course_id => courseid
+    )
+
+
+    #p flash[:notice].to_s
+    #assert assignment.save
+
+    sample_response = ''
+    responses = WikiHelper::review_mediawiki '//expertiza.csc.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', assignment.id, 'sarao'
+    assert_equal responses, sample_response
+
+    responses = WikiHelper::review_mediawiki '//expertiza.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', assignment.id, 'srikanth'
+    assert_equal responses, sample_response
+  end
+
+    def test_wiki_spider_nil_assignment_id
+    questionnaire_id = Questionnaire.first.id
+    instructorid = Instructor.first.id
+    courseid = Course.first.id
+
+    #@testUser = users(:Student1).id
+    #@user = User.find(@testUser)
+    #id = Assignment.find(assignments(:assignment_team_count).id).id
+    # create a new assignment
+    assignment = Assignment.new(:name => "2_valid_test",
+                                :course_id => 1,
+                                :directory_path => "2_valid_test",
+                                :review_questionnaire_id => questionnaire_id,
+                                :review_of_review_questionnaire_id => questionnaire_id,
+                                :author_feedback_questionnaire_id => questionnaire_id,
+                                :instructor_id => instructorid,
+                                :course_id => courseid
+    )
+
+
+    #p flash[:notice].to_s
+    #assert assignment.save
+
+    sample_response = ''
+    responses = WikiHelper::review_mediawiki '//expertiza.csc.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', nil, 'sarao'
+    assert_equal responses, sample_response
+
+    responses = WikiHelper::review_mediawiki '//expertiza.ncsu.edu/wiki/index.php?title=CSC/ECE_517_Fall_2011/ch4_4f_sl', nil, 'srikanth'
+    assert_equal responses, sample_response
+  end
 end
 
 
